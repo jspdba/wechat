@@ -6,6 +6,7 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"errors"
+	"fmt"
 )
 
 var (
@@ -38,9 +39,8 @@ func AesCBCDecrypt(session_key, encryptedData, iv string) (plaintext []byte,
 		return nil, err
 	}
 	plaintext = make([]byte, len(encryptedDatabytes))
-	decryptor := cipher.NewCBCDecrypter(block, ivbytes)
-	decryptor.CryptBlocks(plaintext, encryptedDatabytes)
-	return PKCS5UnPadding(plaintext, decryptor.BlockSize())
+	cipher.NewCBCDecrypter(block, ivbytes).CryptBlocks(plaintext, encryptedDatabytes)
+	return PKCS5UnPadding(plaintext, block.BlockSize())
 }
 
 //https://play.golang.org/p/oZ5OwdRYLV
